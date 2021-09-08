@@ -3,16 +3,22 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps {
-                sh 'dotnet restore'
-                sh 'dotnet build --configuration Release --no-restore'
-            }
+            sh label:
+                'install dependencies'
+            script: '''
+                dotnet restore
+                dotnet build --configuration Release --no-restore
+            '''
         }
         stage('Test') {
-            steps {
-                sh 'dotnet test --no-restore --verbosity normal'
-            }
-        }
+        sh label:
+          'Running npm run test',
+        script: '''
+          node --version
+          cd hello-world-node
+          npm run test
+        '''
+      }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
