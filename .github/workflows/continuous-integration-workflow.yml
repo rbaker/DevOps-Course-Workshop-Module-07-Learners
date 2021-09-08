@@ -28,6 +28,7 @@ jobs:
       run: npm run lint
     - name: Send Slack notifiaction
       uses: rtCamp/action-slack-notify@v2
+      if: always()
       env:
         SLACK_CHANNEL: workshop-7-alerts-rich-sushma
         SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
