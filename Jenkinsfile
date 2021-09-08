@@ -21,7 +21,10 @@ pipeline {
         }
         stage('NPM Installation') {
             agent {
-                docker { image 'node:alpine' }
+                docker {
+                    image 'node:alpine'
+                    additionalBuildArgs '--build-arg UID=113'
+                }
             }
             steps {
                 sh 'npm install'
