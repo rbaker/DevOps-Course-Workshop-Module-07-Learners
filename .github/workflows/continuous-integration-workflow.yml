@@ -20,3 +20,9 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+    - name: TypeScript Build
+      working-directory: ./DotnetTemplate.Web
+      run: npm t
+    - name: NPM Lint
+      working-directory: ./DotnetTemplate.Web
+      run: npm run lint
