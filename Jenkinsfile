@@ -1,13 +1,14 @@
 pipeline {
-    agent {
-        docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
-    }
-
-    environment {
-        DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
-    }
 
     stages {
+        agent {
+            docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
+        }
+
+        environment {
+            DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
+        }
+
         stage('Build') {
             steps {
                 sh 'dotnet restore'
@@ -15,6 +16,13 @@ pipeline {
             }
         }
         stage('Test') {
+            agent {
+                docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
+            }
+
+            environment {
+                DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
+            }
             steps {
                 sh 'dotnet test --no-restore --verbosity normal'
             }
@@ -23,7 +31,6 @@ pipeline {
             agent {
                 docker {
                     image 'node:alpine'
-                    additionalBuildArgs '--build-arg UID=113'
                 }
             }
             steps {
