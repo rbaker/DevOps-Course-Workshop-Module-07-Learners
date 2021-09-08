@@ -3,11 +3,15 @@ pipeline {
         docker { image "mcr.microsoft.com/dotnet/sdk:5.0" }
     }
 
+    environment {
+        DOTNET_CLI_HOME = "/tmp/dotnet_cli_home"
+    }
+
     stages {
         stage('Build') {
             steps {
-                dotnet restore
-                dotnet build --configuration Release --no-restore
+                sh "dotnet restore"
+                sh "dotnet build --configuration Release --no-restore"
             }
         }
         stage('Test') {
