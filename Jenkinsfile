@@ -3,10 +3,9 @@ pipeline {
 
     environment {
                 DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
-            }
+    }
 
     stages {
-
         stage('Build') {
             agent {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
@@ -32,9 +31,11 @@ pipeline {
                 }
             }
             steps {
-                sh 'npm install'
-                sh 'npm t'
-                sh 'npm run lint'
+                dir ('DotnetTemplate.Web') {
+                    sh 'npm install'
+                    sh 'npm t'
+                    sh 'npm run lint'
+                }
             }
         }
         stage('Deploy') {
