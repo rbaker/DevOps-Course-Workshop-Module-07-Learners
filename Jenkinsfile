@@ -3,21 +3,15 @@ pipeline {
 
     stages {
         stage('Build') {
-            sh label:
-                'install dependencies'
-            script: '''
-                dotnet restore
-                dotnet build --configuration Release --no-restore
-            '''
+            steps {
+                dotnetRestore
+                dotnetBuild
+            }
         }
         stage('Test') {
-        sh label:
-          'Running npm run test',
-        script: '''
-          node --version
-          cd hello-world-node
-          npm run test
-        '''
+            steps {
+                dotnetTest
+            }
       }
         stage('Deploy') {
             steps {
