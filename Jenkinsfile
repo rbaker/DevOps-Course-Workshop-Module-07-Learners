@@ -21,7 +21,7 @@ pipeline {
         }
         stage('NPM Installation') {
             agent {
-                docker { image 'node:14-alpine' }
+                docker { image 'node:alpine' }
             }
             steps {
                 sh 'npm install'
