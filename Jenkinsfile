@@ -44,4 +44,6 @@ pipeline {
             }
         }
     }
+
+    slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', failOnError: true, message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
 }
