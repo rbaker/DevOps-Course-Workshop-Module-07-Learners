@@ -47,13 +47,13 @@ pipeline {
 
     post {
         success {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'green', message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
         }
         unstable {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'yellow', message: 'Build Unstable', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'warning', message: 'Build Unstable', tokenCredentialId: 'workshop-7-notifier'
         }
         failure {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'red', message: 'Build Failed', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'danger', message: 'Build Failed', tokenCredentialId: 'workshop-7-notifier'
         }
         aborted {
             slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'grey', message: 'Build Aborted', tokenCredentialId: 'workshop-7-notifier'
