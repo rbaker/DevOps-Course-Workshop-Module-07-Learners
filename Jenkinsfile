@@ -37,6 +37,7 @@ pipeline {
                     sh 'npm run lint'
                 }
             }
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', failOnError: true, message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
         }
         stage('Deploy') {
             steps {
@@ -45,5 +46,4 @@ pipeline {
         }
     }
 
-    slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', failOnError: true, message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
 }
