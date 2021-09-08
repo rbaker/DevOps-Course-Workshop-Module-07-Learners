@@ -8,13 +8,10 @@ pipeline {
     stages {
         stage('Send start notification') {
             steps {
-                slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', message: 'Starting build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +']', tokenCredentialId: 'workshop-7-notifier'
+                slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'grey', message: 'Starting build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +']', tokenCredentialId: 'workshop-7-notifier'
             }
         }
         stage('Build') {
-            agent {
-                docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
-            }
             steps {
                 sh 'dotnet restore'
                 sh 'dotnet build --configuration Release --no-restore'
