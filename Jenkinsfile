@@ -1,16 +1,18 @@
 pipeline {
-    agent any
+    agent {
+        docker { image "mcr.microsoft.com/dotnet/sdk:5.0" }
+    }
 
     stages {
         stage('Build') {
             steps {
-                dotnetRestore
-                dotnetBuild
+                dotnet restore
+                dotnet build --configuration Release --no-restore
             }
         }
         stage('Test') {
             steps {
-                dotnetTest
+                dotnet test --no-restore --verbosity normal
             }
       }
         stage('Deploy') {
