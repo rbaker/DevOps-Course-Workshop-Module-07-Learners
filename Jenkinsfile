@@ -6,6 +6,11 @@ pipeline {
     }
 
     stages {
+        stage('Send start notification') {
+            steps {
+                slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', message: 'Starting build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +']', tokenCredentialId: 'workshop-7-notifier'
+            }
+        }
         stage('Build') {
             agent {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
@@ -47,16 +52,16 @@ pipeline {
 
     post {
         success {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', message: 'Build Complete', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'good', message: 'Build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +'] Complete', tokenCredentialId: 'workshop-7-notifier'
         }
         unstable {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'warning', message: 'Build Unstable', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'warning', message: 'Build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +'] Unstable', tokenCredentialId: 'workshop-7-notifier'
         }
         failure {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'danger', message: 'Build Failed', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'danger', message: 'Build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +'] Failed', tokenCredentialId: 'workshop-7-notifier'
         }
         aborted {
-            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'grey', message: 'Build Aborted', tokenCredentialId: 'workshop-7-notifier'
+            slackSend channel: 'workshop-7-alerts-rich-sushma', color: 'grey', message: 'Build '+ env.JOB_NAME + ' ['+ env.BUILD_NUMBER +'] Aborted', tokenCredentialId: 'workshop-7-notifier'
         }
     }
 }
