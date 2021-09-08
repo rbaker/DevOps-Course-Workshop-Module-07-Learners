@@ -4,12 +4,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                sh 'dotnet restore'
+                sh 'dotnet build --configuration Release --no-restore'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                sh 'dotnet test --no-restore --verbosity normal'
             }
         }
         stage('Deploy') {
