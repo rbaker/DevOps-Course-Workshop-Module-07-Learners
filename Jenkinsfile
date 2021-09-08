@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                dotnet test --no-restore --verbosity normal
+                sh "dotnet test --no-restore --verbosity normal"
             }
       }
         stage('Deploy') {
