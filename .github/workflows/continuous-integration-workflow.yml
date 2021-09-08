@@ -20,9 +20,6 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-    - name: NPM install
-      working-directory: ./DotnetTemplate.Web
-      run: npm install
     - name: TypeScript Build
       working-directory: ./DotnetTemplate.Web
       run: npm t
