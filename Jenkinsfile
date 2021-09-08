@@ -1,10 +1,11 @@
-/* groovylint-disable-next-line CompileStatic */
-pipeline {
-    agent any
-    environment {
-        DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
-    }
+node {
     try {
+        notifyBuild('STARTED')
+
+        environment {
+            DOTNET_CLI_HOME = '/tmp/dotnet_cli_home'
+        }
+
         stage('Build') {
             agent {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
@@ -18,6 +19,7 @@ pipeline {
             agent {
                 docker { image 'mcr.microsoft.com/dotnet/sdk:5.0' }
             }
+
             steps {
                 sh 'dotnet test --no-restore --verbosity normal'
             }
@@ -41,15 +43,17 @@ pipeline {
                 echo 'Deploying....'
             }
         }
-    } catch (e) {
+  } catch (e) {
+        // If there was an exception thrown, the build failed
         currentBuild.result = 'FAILED'
         throw e
-    } finally {
+  } finally {
+        // Success or failure, always send notifications
         notifyBuild(currentBuild.result)
     }
 }
 
-void notifyBuild(String buildStatus = 'STARTED') {
+def notifyBuild(String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
@@ -57,6 +61,7 @@ void notifyBuild(String buildStatus = 'STARTED') {
     String colorCode = '#FF0000'
     String subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     String summary = "${subject} (${env.BUILD_URL})"
+
     // Override default values based on build status
     if (buildStatus == 'STARTED') {
         color = 'YELLOW'
@@ -68,6 +73,7 @@ void notifyBuild(String buildStatus = 'STARTED') {
         color = 'RED'
         colorCode = '#FF0000'
     }
+
     // Send notifications
     slackSend (color: colorCode, message: summary)
 }
