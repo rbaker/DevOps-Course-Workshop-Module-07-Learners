@@ -1,6 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0
-
-EXPOSE 5000
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 
 WORKDIR /app
 
@@ -14,4 +12,14 @@ RUN dotnet build
 RUN npm install
 RUN npm run build
 
-ENTRYPOINT dotnet run
+RUN dotnet publish -o /dist
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+
+EXPOSE 5000
+
+WORKDIR /app
+
+COPY --from=build /dist/ .
+
+ENTRYPOINT [ "dotnet", "DotnetTemplate.Web.dll" ]

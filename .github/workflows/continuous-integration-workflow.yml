@@ -73,4 +73,10 @@ jobs:
         context: .
         push: true
         tags: rgbaker/dotnettemplate
-        
+    - name: deploy to heroku
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "dotnettemplate-workshop-8" #Must be unique in Heroku
+        heroku_email: "richardgbaker@yahoo.co.uk"
+        usedocker: true
