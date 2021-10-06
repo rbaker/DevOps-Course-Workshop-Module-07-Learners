@@ -35,6 +35,7 @@ jobs:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_app_name: "frozen-shore-15036" #Must be unique in Heroku
         heroku_email: "richardgbaker@yahoo.co.uk"
+        branch: ci-test
         usedocker: true
     - name: Send Slack notifiaction success
       uses: rtCamp/action-slack-notify@v2
