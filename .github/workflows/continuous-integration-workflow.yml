@@ -1,0 +1,70 @@
+name: Continuous Integration
+on: [push]                      # Will make the workflow run every time you push to any branch
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest      # Sets the build environment a machine with the latest Ubuntu installed
+    strategy:
+      matrix:
+        dotnet-version: ['5.0.x' ]
+    steps:
+    - uses: actions/checkout@v2 # Adds a step to checkout the repository code
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: NPM install
+      working-directory: ./DotnetTemplate.Web
+      run: npm install
+    - name: TypeScript Build
+      working-directory: ./DotnetTemplate.Web
+      run: npm t
+    - name: NPM Lint
+      working-directory: ./DotnetTemplate.Web
+      run: npm run lint
+    - name: deploy to heroku
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "frozen-shore-15036" #Must be unique in Heroku
+        heroku_email: "richardgbaker@yahoo.co.uk"
+    - name: Send Slack notifiaction success
+      uses: rtCamp/action-slack-notify@v2
+      if: success()
+      env:
+        SLACK_CHANNEL: workshop-7-alerts-rich-sushma
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: ':rocket:'
+        SLACK_TITLE: Build Success
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Send Slack notifiaction fail
+      uses: rtCamp/action-slack-notify@v2
+      if: failure()
+      env:
+        SLACK_CHANNEL: workshop-7-alerts-rich-sushma
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: ':cry:'
+        SLACK_TITLE: Build Failure
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Send Slack notifiaction cancel
+      uses: rtCamp/action-slack-notify@v2
+      if: cancelled()
+      env:
+        SLACK_CHANNEL: workshop-7-alerts-rich-sushma
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: ':man-shrugging:'
+        SLACK_TITLE: Build Cancelled
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
